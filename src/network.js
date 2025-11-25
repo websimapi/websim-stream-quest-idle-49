@@ -25,6 +25,10 @@ export class NetworkManager {
         this.onTokenInvalid = null; // fired when host rejects/expired token
         this.onChatMessage = null; // fired when any in-room chat message is received
 
+        // NEW: track whether this host instance is the primary/active host
+        // Non-hosts will always treat this as false.
+        this.isPrimaryHost = false;
+
         // Ensure DB context is set as early as possible for hosts
         if (this.isHost) {
             const savedChannel = localStorage.getItem('sq_host_channel');
@@ -40,18 +44,49 @@ export class NetworkManager {
 
     async initialize() {
         if (this.isHost) {
-            // Host-side setup (DB context was already set in constructor if a channel was saved)
-            console.log("Initializing Host Logic...");
-            setupHostListeners(this);
-            setupPresenceWatcher(this);
-            // Initial load of Twitch users for current DB context
-            this.refreshPlayerList();
+            // NEW: Host lock – ensure only one active host instance runs full host logic
+            // Use roomState.hostLock.hostClientId to designate the primary host.
+            const currentLock = (this.room.roomState && this.room.roomState.hostLock) || null;
+            if (!currentLock || !currentLock.hostClientId) {
+                // No lock yet – claim it
+                this.room.updateRoomState({
+                    hostLock: {
+                        hostClientId: this.room.clientId,
+                        ts: Date.now()
+                    }
+                });
+                this.isPrimaryHost = true;
+            } else if (currentLock.hostClientId === this.room.clientId) {
+                // This client already owns the lock (e.g. reconnect)
+                this.isPrimaryHost = true;
+            } else {
+                // Another host session is already running – this one becomes view-only
+                this.isPrimaryHost = false;
+                this.isHost = false; // Treat this instance as a normal client from here on
+                appendHostLog(
+                    `Secondary host session detected for client ${this.room.clientId}; ` +
+                    `host logic is disabled because primary host ${currentLock.hostClientId} is active.`
+                );
+            }
 
-            // New: apply offline catch-up for any in-progress tasks before starting live loop
-            await applyOfflineProgress(this);
+            // Host-side setup only if we are the primary/active host
+            if (this.isPrimaryHost) {
+                console.log("Initializing Host Logic (primary instance)...");
+                setupHostListeners(this);
+                setupPresenceWatcher(this);
+                // Initial load of Twitch users for current DB context
+                this.refreshPlayerList();
 
-            // Start background loop to complete finished tasks
-            startTaskCompletionLoop(this);
+                // New: apply offline catch-up for any in-progress tasks before starting live loop
+                await applyOfflineProgress(this);
+
+                // Start background loop to complete finished tasks
+                startTaskCompletionLoop(this);
+            } else {
+                // Act like a client for all further behavior
+                console.log("Host Logic skipped – this is a secondary host session (view-only).");
+                this.setupClientListeners();
+            }
         } else {
             console.log("Initializing Client Logic...");
             this.setupClientListeners();

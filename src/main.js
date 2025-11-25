@@ -6,12 +6,12 @@ async function init() {
     const currentUser = await window.websim.getCurrentUser();
     const creator = await window.websim.getCreator();
 
-    const isHost = currentUser.id === creator.id;
+    const isCreatorHost = currentUser.id === creator.id;
 
     const room = new WebsimSocket();
     await room.initialize();
 
-    console.log(`Initializing Game. Role: ${isHost ? 'HOST' : 'CLIENT'}`);
+    console.log(`Initializing Game. Role: ${isCreatorHost ? 'HOST' : 'CLIENT'}`);
 
     // preload all UI, scene, and item assets before showing the app
     try {
@@ -34,8 +34,14 @@ async function init() {
     }
 
     // Pass user info to network manager
-    const network = new NetworkManager(room, isHost, currentUser);
-    const ui = new UIManager(network, isHost);
+    const network = new NetworkManager(room, isCreatorHost, currentUser);
+    // Wait for host/client initialization and host-lock resolution
+    await network.ready;
+
+    // Effective host flag may be downgraded if this is a secondary host session
+    const effectiveIsHost = network.isHost;
+
+    const ui = new UIManager(network, effectiveIsHost);
 
     // Hook up specific Sync callback for offline progress check
     network.onSyncData = (playerData) => {
@@ -43,9 +49,12 @@ async function init() {
     };
 
     // Setup Host Specific UI
-    if (isHost) {
+    if (effectiveIsHost) {
         const savedChannel = localStorage.getItem('sq_host_channel');
-        document.getElementById('host-controls').style.display = 'block';
+        const hostControlsEl = document.getElementById('host-controls');
+        if (hostControlsEl) {
+            hostControlsEl.style.display = 'block';
+        }
         if (savedChannel) {
             const connected = network.connectTwitch(savedChannel);
             if (connected) {
@@ -62,8 +71,8 @@ async function init() {
             }
         }
     } else {
-        // Client: if we already have a stored token from a previous link,
-        // automatically sync with the host so we don't appear as "Guest" on reload.
+        // Client (or secondary host treated as client): if we already have a stored token
+        // from a previous link, automatically sync with the host so we don't appear as "Guest" on reload.
         const token = localStorage.getItem('sq_token');
         if (token) {
             network.syncWithToken(token);
@@ -75,8 +84,8 @@ async function init() {
     if (hostConsole) {
         hostConsole.style.display = 'flex';
 
-        // For regular users, always show chat view (input visible)
-        if (!isHost) {
+        // For regular users (and secondary host sessions), always show chat view (input visible)
+        if (!effectiveIsHost) {
             hostConsole.classList.add('chat-view');
 
             // Ensure the header label reads "Chat" for regular users
