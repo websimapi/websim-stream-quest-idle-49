@@ -36,6 +36,14 @@
     letter-spacing: 5px;
 }
 
+/* Allow manual selection/copy of the "!link CODE" text even though the
+   global reset disables user selection by default. */
+.code-box,
+.code-box * {
+    user-select: text;
+    cursor: text;
+}
+
 /* Offline catchup card */
 
 .offline-card {
