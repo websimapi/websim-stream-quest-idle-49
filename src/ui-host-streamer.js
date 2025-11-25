@@ -128,7 +128,12 @@ export function setupStreamerMode(uiManager, network) {
     }
 
     // Listen for global database saves to update UI if spectating and drive streamer mode
-    window.addEventListener('sq:player_update', (e) => {
+    // Ensure we only ever have a single global handler registered, even if setupStreamerMode is called multiple times
+    if (uiManager._streamerModePlayerUpdateHandler) {
+        window.removeEventListener('sq:player_update', uiManager._streamerModePlayerUpdateHandler);
+    }
+
+    uiManager._streamerModePlayerUpdateHandler = (e) => {
         const p = e.detail;
         if (!p) return;
         const now = Date.now();
@@ -169,7 +174,9 @@ export function setupStreamerMode(uiManager, network) {
                 uiManager.streamerPendingTargetTs = now;
             }
         }
-    });
+    };
+
+    window.addEventListener('sq:player_update', uiManager._streamerModePlayerUpdateHandler);
 
     // Periodic Streamer Mode driver (host only)
     if (uiManager.isHost && !uiManager.streamerInterval) {
