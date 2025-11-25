@@ -70,3 +70,105 @@ main {
 .inventory-sidebar h2 {
     display: none;
 }
+
+/* Mobile / compact layout for 320x500-style panels */
+@media (max-width: 480px) and (max-height: 600px) {
+    body {
+        overflow: hidden;
+    }
+
+    #app {
+        max-width: 320px;
+        max-height: 500px;
+        margin: 0 auto;
+    }
+
+    header {
+        height: 56px;
+        padding: 0 8px;
+    }
+
+    header .logo {
+        height: 40px;
+    }
+
+    main {
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* Stack sidebars above and below main content */
+    .skills-sidebar,
+    .inventory-sidebar {
+        width: 100%;
+        flex-shrink: 0;
+        padding: 8px;
+        border-right: none;
+        border-left: none;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        max-height: 110px;
+        overflow-y: auto;
+    }
+
+    .skills-sidebar {
+        order: 1;
+    }
+
+    .content-area {
+        order: 2;
+        flex: 1 1 auto;
+        padding: 4px 6px;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    #skill-details {
+        padding: 8px 4px;
+        overflow-y: auto;
+    }
+
+    .inventory-sidebar {
+        order: 3;
+    }
+
+    /* Tighten task grid spacing for small width */
+    .task-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .task-card {
+        padding: 10px;
+        gap: 6px;
+    }
+
+    /* Make tier scene shorter */
+    .tier-scene {
+        height: 180px;
+        margin-bottom: 8px;
+    }
+
+    /* Compact tier tabs */
+    .tier-tabs {
+        gap: 4px;
+        margin-bottom: 6px;
+    }
+
+    .tier-tab {
+        padding: 4px 6px;
+        font-size: 0.7rem;
+    }
+
+    /* Compact inventory grid cells */
+    .inventory-list {
+        grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+        gap: 3px;
+    }
+
+    .inventory-item {
+        width: 56px;
+        height: 56px;
+    }
+}

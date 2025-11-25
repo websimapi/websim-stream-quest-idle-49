@@ -89,7 +89,7 @@
         <!-- Main Content Grid -->
         <main>
             <!-- Sidebar Skills -->
-            <aside class="skills-sidebar" id="view-skills">
+            <aside class="skills-sidebar">
                 <h2>Skills</h2>
                 <div id="skills-list">
                     <!-- Populated by JS -->
@@ -97,7 +97,7 @@
             </aside>
 
             <!-- Content Area -->
-            <section class="content-area" id="view-action">
+            <section class="content-area">
                 
                 <!-- Login/Link Overlay (Triggered by top-right button) -->
                 <div id="auth-overlay" class="overlay" style="display:none;">
@@ -202,7 +202,7 @@
             </section>
 
             <!-- Inventory Sidebar -->
-            <aside class="inventory-sidebar" id="view-inventory">
+            <aside class="inventory-sidebar">
                 <div class="inventory-tabs">
                     <button id="tab-inventory" class="inventory-tab active">Inventory</button>
                     <button id="tab-equipment" class="inventory-tab">Equipment</button>
@@ -246,22 +246,6 @@
                 </div>
             </aside>
         </main>
-
-        <!-- Mobile Navigation (Visible only on small screens) -->
-        <nav id="mobile-nav" style="display: none;">
-            <button class="mobile-nav-btn" data-target="view-skills">
-                <span class="nav-icon">⚔️</span>
-                <span class="nav-label">Skills</span>
-            </button>
-            <button class="mobile-nav-btn active" data-target="view-action">
-                <span class="nav-icon">⚡</span>
-                <span class="nav-label">Action</span>
-            </button>
-            <button class="mobile-nav-btn" data-target="view-inventory">
-                <span class="nav-icon">🎒</span>
-                <span class="nav-label">Bag</span>
-            </button>
-        </nav>
 
         <!-- Offline Catchup Popup -->
         <div id="offline-popup" class="overlay" style="display:none;">

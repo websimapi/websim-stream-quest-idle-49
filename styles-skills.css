@@ -145,5 +145,32 @@
     image-rendering: pixelated;
 }
 
+/* Mobile / compact tweaks for skills list */
+@media (max-width: 480px) and (max-height: 600px) {
+    .skills-sidebar h2 {
+        margin-bottom: 8px;
+        font-size: 0.8rem;
+    }
+
+    .skill-item {
+        padding: 6px;
+        gap: 6px;
+        margin-bottom: 3px;
+    }
+
+    .skill-item img {
+        width: 24px;
+        height: 24px;
+    }
+
+    .skill-name {
+        font-size: 0.8rem;
+    }
+
+    .skill-level-label {
+        font-size: 0.7rem;
+    }
+}
+
 /* Tombstone: skills UI moved */
 /* // removed skill list, skill header, tier tabs, and scene styles from styles.css into styles-skills.css */

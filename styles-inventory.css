@@ -123,3 +123,25 @@
     border-color: var(--accent);
     color: var(--text-main);
 }
+
+/* Mobile / compact tweaks for inventory sidebar */
+@media (max-width: 480px) and (max-height: 600px) {
+    .inventory-tabs {
+        gap: 6px;
+        margin-bottom: 10px;
+        padding-bottom: 6px;
+    }
+
+    .inventory-tab {
+        font-size: 0.75rem;
+        padding: 6px;
+    }
+
+    .equipment-grid {
+        gap: 6px;
+    }
+
+    .equip-slot {
+        font-size: 0.6rem;
+    }
+}

@@ -300,3 +300,63 @@ header {
     top: 110%;
     right: 0;
 }
+
+/* Mobile / compact header adjustments */
+@media (max-width: 480px) and (max-height: 600px) {
+    header {
+        padding: 0 8px;
+    }
+
+    .header-center {
+        flex-grow: 0;
+        flex-basis: auto;
+        justify-content: flex-start;
+        margin: 0 4px;
+    }
+
+    .task-info {
+        padding: 6px;
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    #task-label {
+        font-size: 0.8rem;
+    }
+
+    .progress-wrapper {
+        gap: 6px;
+    }
+
+    #task-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .header-right {
+        gap: 8px;
+    }
+
+    .energy-display {
+        padding: 4px 6px;
+    }
+
+    .energy-cell-bar-bg {
+        width: 60px;
+    }
+
+    #user-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    #username {
+        font-size: 0.8rem;
+    }
+
+    .primary-btn.small-primary-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        margin-top: 0;
+    }
+}

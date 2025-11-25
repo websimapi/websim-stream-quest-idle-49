@@ -20,9 +20,6 @@
 /* Host console + dropdowns */
 @import url('styles-host-console.css');  /* host console, host dropdown, shared dropdown styles */
 
-/* Mobile / Responsive Overrides */
-@import url('styles-mobile.css');
-
 /* Tombstones indicating where code used to live in this file */
 /* // removed global resets, root variables, and base layout rules (moved to styles-base.css) */
 /* // removed main flex layout and sidebars (moved to styles-layout.css) */

@@ -241,3 +241,14 @@
 
 /* Tombstone: host console moved */
 /* // removed host-console and dropdown styles from styles.css into styles-host-console.css */
+
+/* Compact view: hide host console in very small mobile/twitch-panel layouts */
+@media (max-width: 480px) and (max-height: 600px) {
+    .host-console {
+        display: none !important;
+    }
+
+    .host-console-floating-toggle {
+        display: none !important;
+    }
+}
